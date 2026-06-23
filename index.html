@@ -284,7 +284,11 @@ body.plots-dot .c{border-radius:50%;}
   box-shadow:0 6px 20px rgba(42,36,34,0.10),0 1px 3px rgba(42,36,34,0.07);
   display:flex;align-items:center;gap:11px;padding:8px 10px 8px 9px;
 }
-.hb-logo{height:40px;width:auto;display:block;flex-shrink:0;}
+.hb-founder{height:48px;width:auto;max-width:160px;object-fit:contain;border-radius:6px;flex-shrink:0;display:block;}
+.hb-founder[style*="display:none"] ~ .hb-logo{display:block;}
+.hb-home{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;background:rgba(0,0,0,0.06);border:1px solid rgba(0,0,0,0.1);color:#5C4A2A;text-decoration:none;flex-shrink:0;transition:background 0.15s;}
+.hb-home:hover{background:rgba(0,0,0,0.12);}
+.hb-logo{height:40px;width:auto;display:none;flex-shrink:0;}
 body.theme-midnight .hb-logo{background:#F1EADC;border-radius:8px;padding:3px 7px;}
 .hb-mapbtn{flex-shrink:0;white-space:nowrap;background:rgba(var(--accent-rgb),0.10);color:var(--accent);border:1px solid rgba(var(--accent-rgb),0.22);border-radius:20px;padding:9px 14px;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;transition:background 0.15s,transform 0.08s;}
 .hb-mapbtn:hover{background:rgba(var(--accent-rgb),0.16);}
@@ -442,9 +446,12 @@ body.theme-midnight .hb-mapbtn,body.theme-midnight .b3-filter{color:#EADFD2;back
 .lpDim{font-size:11px;color:#A7865E;margin-top:8px;font-weight:600;}
 
 /* ══ RESPONSIVE ═════════════════════════════════ */
+@media(max-width:480px){
+  .hb-founder{height:38px;max-width:120px;}
+}
 @media(max-width:380px){
   #H{padding-left:9px;padding-right:9px;gap:8px;}
-  .hb-logo{height:32px;}
+  .hb-founder{height:32px;max-width:100px;}
   .hb-logotxt{width:38px;height:38px;}
   .iconbtn{width:38px;height:38px;}
   .hb-mapbtn{padding:8px 11px;font-size:11.5px;}
@@ -460,7 +467,10 @@ body.theme-midnight .hb-mapbtn,body.theme-midnight .b3-filter{color:#EADFD2;back
 
 <!-- LOADING -->
 <div id="L">
-  <img src="be3aea38-43a6-4d9b-9066-440fb43c374e" alt="Bhaarat City 007" style="height:120px;width:auto;max-width:80vw;object-fit:contain;" onerror="this.style.display='none';document.getElementById('Ltxt').style.display='flex';">
+  <img src="./BC_Founder_Mascot_Primary_Logo.jpg" alt="Bhaarat City 007" style="height:140px;width:auto;max-width:85vw;object-fit:contain;border-radius:10px;" onerror="this.style.display='none';document.getElementById('Ltxt').style.display='flex';document.getElementById('Ltxt2').style.display='flex';">
+  <div id="Ltxt2" style="display:none;flex-direction:column;align-items:center;gap:4px;">
+    <img src="./Asset_2-8.png" style="height:80px;width:auto;" onerror="this.style.display='none';">
+  </div>
   <div id="Ltxt" style="display:none;flex-direction:column;align-items:center;gap:4px;">
     <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:700;color:#1A1510;">BHAARAT CITY</div>
     <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;color:#C9A84C;letter-spacing:0.18em;">007</div>
@@ -474,7 +484,14 @@ body.theme-midnight .hb-mapbtn,body.theme-midnight .b3-filter{color:#EADFD2;back
 
   <!-- Brand card -->
   <div class="hb">
-    <img class="hb-logo" src="./Asset_2-8.png" alt="Bhaarat City 007" onerror="this.style.display='none';document.getElementById('hLT').style.display='flex';">
+    <!-- Home button -->
+    <a href="https://www.bhaaratcity007.com" class="hb-home" title="Go to Home">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </a>
+    <!-- Founder logo — shows brand logo as fallback -->
+    <img class="hb-founder" id="founderLogo" src="./BC_Founder_Mascot_Primary_Logo.jpg" alt="Bhaarat City" onerror="founderErr();">
+    <!-- Brand logo fallback -->
+    <img id="hbLogoFb" class="hb-logo" src="./Asset_2-8.png" alt="Bhaarat City 007" style="display:none;" onerror="this.style.display='none';document.getElementById('hLT').style.display='flex';">
     <div class="hb-logotxt" id="hLT" style="display:none;">
       <span>BC</span><span>007</span>
     </div>
@@ -648,6 +665,14 @@ body.theme-midnight .hb-mapbtn,body.theme-midnight .b3-filter{color:#EADFD2;back
 
 <script>
 var ROWS=36,COLS=30,STEP=31,PAD=40,CELL=28;
+
+// Logo fallback chain
+function founderErr(){
+  var f=document.getElementById('founderLogo');
+  if(f)f.style.display='none';
+  var fb=document.getElementById('hbLogoFb');
+  if(fb){fb.style.display='block';}
+}
 var plots=[],lms=[],lmRegions=[];
 var sc=1,px=10,py=10;
 var fFacing='All',fCorner=false,fPark=false;
@@ -815,14 +840,16 @@ function posLayout(){
 function applyT(){document.getElementById('C').style.transform='translate('+px+'px,'+py+'px) scale('+sc+')';}
 function center(){
   var m=document.getElementById('M');
-  var mw=m.offsetWidth,mh=m.offsetHeight;
+  var mw=m.offsetWidth;
+  var mh=window.innerHeight;
   var hh=document.getElementById('H').offsetHeight;
+  var avW=mw-24;
   var avH=mh-hh-24;
   var cw=COLS*STEP+PAD*2,ch=ROWS*STEP+PAD*2;
-  var scW=(mw-24)/cw,scH=avH/ch;
+  var scW=avW/cw,scH=avH/ch;
   sc=Math.min(scW,scH,1);
   px=(mw-cw*sc)/2;
-  py=hh+12+(avH-ch*sc)/2;
+  py=hh+12;
   applyT();
 }
 function zoom(factor){
@@ -836,29 +863,61 @@ var ARCH_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88.87 64.43" 
 
 function getParkIcon(iconKey, cx, cy){
   var s='';
-  var k=ICON_MAP[iconKey]||iconKey||'';
-  if(k==='fountain'){
-    s+='<line x1="'+cx+'" y1="'+(cy-10)+'" x2="'+cx+'" y2="'+(cy+10)+'" stroke="rgba(255,255,255,0.8)" stroke-width="2" stroke-linecap="round"/>';
-    s+='<line x1="'+(cx-8)+'" y1="'+(cy-4)+'" x2="'+(cx+8)+'" y2="'+(cy-4)+'" stroke="rgba(255,255,255,0.8)" stroke-width="2" stroke-linecap="round"/>';
-    s+='<circle cx="'+cx+'" cy="'+(cy+6)+'" r="5" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>';
-  } else if(k==='gym'){
-    s+='<rect x="'+(cx-10)+'" y="'+(cy-3)+'" width="20" height="6" rx="3" fill="rgba(255,255,255,0.8)"/>';
+  var k=(ICON_MAP[iconKey]||iconKey||'').toLowerCase();
+  // Also match by label name directly from sheet
+  var lbl=iconKey.toLowerCase();
+  if(k==='fountain'||lbl==='fountain'){
+    // Fountain — basin + spray lines
+    s+='<ellipse cx="'+cx+'" cy="'+(cy+8)+'" rx="10" ry="4" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>';
+    s+='<line x1="'+cx+'" y1="'+(cy+4)+'" x2="'+cx+'" y2="'+(cy-8)+'" stroke="rgba(255,255,255,0.8)" stroke-width="2" stroke-linecap="round"/>';
+    s+='<line x1="'+(cx-5)+'" y1="'+(cy)+'" x2="'+(cx-9)+'" y2="'+(cy-6)+'" stroke="rgba(255,255,255,0.6)" stroke-width="1.5" stroke-linecap="round"/>';
+    s+='<line x1="'+(cx+5)+'" y1="'+(cy)+'" x2="'+(cx+9)+'" y2="'+(cy-6)+'" stroke="rgba(255,255,255,0.6)" stroke-width="1.5" stroke-linecap="round"/>';
+  } else if(k==='gym'||lbl==='outdoor gym'){
+    // Dumbbell
+    s+='<rect x="'+(cx-10)+'" y="'+(cy-2)+'" width="20" height="4" rx="2" fill="rgba(255,255,255,0.8)"/>';
     s+='<rect x="'+(cx-14)+'" y="'+(cy-6)+'" width="5" height="12" rx="2" fill="rgba(255,255,255,0.8)"/>';
     s+='<rect x="'+(cx+9)+'" y="'+(cy-6)+'" width="5" height="12" rx="2" fill="rgba(255,255,255,0.8)"/>';
-  } else if(k==='meditation'){
-    s+='<circle cx="'+cx+'" cy="'+(cy-5)+'" r="4" fill="rgba(255,255,255,0.8)"/>';
-    s+='<path d="M'+(cx-10)+','+(cy+8)+' Q'+cx+','+(cy-2)+' '+(cx+10)+','+(cy+8)+'" fill="rgba(255,255,255,0.6)" stroke="rgba(255,255,255,0.8)" stroke-width="1.2"/>';
-  } else if(k==='football'){
+  } else if(k==='meditation'||lbl==='meditation area'){
+    // Lotus / seated figure
+    s+='<circle cx="'+cx+'" cy="'+(cy-6)+'" r="4" fill="rgba(255,255,255,0.8)"/>';
+    s+='<path d="M'+(cx-10)+','+(cy+8)+' Q'+cx+','+(cy-1)+' '+(cx+10)+','+(cy+8)+'" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.8)" stroke-width="1.5"/>';
+  } else if(k==='football'||lbl==='football turf'){
+    // Football / goal posts
     s+='<circle cx="'+cx+'" cy="'+cy+'" r="9" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>';
-    s+='<line x1="'+(cx-9)+'" y1="'+cy+'" x2="'+(cx+9)+'" y2="'+cy+'" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>';
-    s+='<line x1="'+cx+'" y1="'+(cy-9)+'" x2="'+cx+'" y2="'+(cy+9)+'" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>';
-  } else if(k==='electricity'){
-    s+='<polygon points="'+cx+','+(cy-10)+' '+(cx+5)+','+(cy+2)+' '+cx+','+(cy+2)+' '+(cx+2)+','+(cy+10)+' '+(cx-5)+','+(cy-2)+' '+cx+','+(cy-2)+'" fill="rgba(255,240,100,0.9)"/>';
-  } else if(k==='water_tank'){
-    s+='<rect x="'+(cx-8)+'" y="'+(cy-8)+'" width="16" height="14" rx="2" fill="rgba(255,255,255,0.7)"/>';
-    s+='<rect x="'+(cx-5)+'" y="'+(cy+6)+'" width="10" height="4" rx="1" fill="rgba(255,255,255,0.5)"/>';
+    s+='<line x1="'+(cx-9)+'" y1="'+cy+'" x2="'+(cx+9)+'" y2="'+cy+'" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>';
+    s+='<line x1="'+cx+'" y1="'+(cy-9)+'" x2="'+cx+'" y2="'+(cy+9)+'" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>';
+  } else if(k==='electricity'||lbl==='electric grid'){
+    // Lightning bolt
+    s+='<polygon points="'+cx+','+(cy-11)+' '+(cx+5)+','+(cy)+' '+cx+','+(cy)+' '+(cx+3)+','+(cy+11)+' '+(cx-5)+','+(cy)+' '+cx+','+(cy)+'" fill="rgba(255,240,80,0.95)"/>';
+  } else if(k==='water_tank'||lbl==='water tank'){
+    // Tank cylinder
+    s+='<rect x="'+(cx-8)+'" y="'+(cy-9)+'" width="16" height="13" rx="3" fill="rgba(255,255,255,0.7)"/>';
+    s+='<rect x="'+(cx-5)+'" y="'+(cy+4)+'" width="10" height="5" rx="1" fill="rgba(255,255,255,0.5)"/>';
+  } else if(lbl==='walking garden'||lbl==='garden'||k==='garden'){
+    // Tree / leaf
+    s+='<circle cx="'+cx+'" cy="'+(cy-5)+'" r="8" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.8)" stroke-width="1.5"/>';
+    s+='<line x1="'+cx+'" y1="'+(cy+3)+'" x2="'+cx+'" y2="'+(cy+10)+'" stroke="rgba(255,255,255,0.8)" stroke-width="2" stroke-linecap="round"/>';
+  } else if(lbl==='pickleball court'){
+    // Paddle + ball
+    s+='<ellipse cx="'+(cx-2)+'" cy="'+(cy-2)+'" rx="7" ry="8" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>';
+    s+='<rect x="'+(cx+4)+'" y="'+(cy+4)+'" width="2" height="7" rx="1" fill="rgba(255,255,255,0.8)" transform="rotate(-40,'+(cx+5)+','+(cy+7)+')"/>';
+    s+='<circle cx="'+(cx+8)+'" cy="'+(cy+8)+'" r="2.5" fill="rgba(255,255,255,0.9)"/>';
+  } else if(lbl==='pebble garden'){
+    // Pebble dots pattern
+    s+='<circle cx="'+(cx-5)+'" cy="'+(cy-4)+'" r="3" fill="rgba(255,255,255,0.7)"/>';
+    s+='<circle cx="'+(cx+4)+'" cy="'+(cy-6)+'" r="2" fill="rgba(255,255,255,0.6)"/>';
+    s+='<circle cx="'+(cx-3)+'" cy="'+(cy+3)+'" r="2.5" fill="rgba(255,255,255,0.65)"/>';
+    s+='<circle cx="'+(cx+5)+'" cy="'+(cy+3)+'" r="3" fill="rgba(255,255,255,0.7)"/>';
+    s+='<circle cx="'+cx+'" cy="'+(cy-1)+'" r="2" fill="rgba(255,255,255,0.5)"/>';
+  } else if(lbl==="children's park"||lbl==='childrens park'){
+    // Slide shape
+    s+='<circle cx="'+(cx-4)+'" cy="'+(cy-7)+'" r="4" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.8"/>';
+    s+='<line x1="'+(cx-4)+'" y1="'+(cy-3)+'" x2="'+(cx-4)+'" y2="'+(cy+3)+'" stroke="rgba(255,255,255,0.8)" stroke-width="2" stroke-linecap="round"/>';
+    s+='<path d="M'+(cx-4)+','+(cy+3)+' Q'+(cx+4)+','+(cy+5)+' '+(cx+9)+','+(cy+9)+'" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="2" stroke-linecap="round"/>';
   } else {
-    s+='<circle cx="'+cx+'" cy="'+cy+'" r="7" fill="rgba(255,255,255,0.5)"/>';
+    // Fallback — leaf dot
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="8" fill="rgba(255,255,255,0.3)"/>';
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="4" fill="rgba(255,255,255,0.5)"/>';
   }
   return s;
 }
@@ -889,10 +948,10 @@ function buildSVG(){
       var pkColor=lm.color||'#4A7C59';
       svg+='<rect x="'+x1+'" y="'+y1+'" width="'+w+'" height="'+h+'" fill="'+pkColor+'" rx="4" opacity="0.85"/>';
       var iconKey=lm.icon||'';
-      var svgIcon=SVGICONS[ICON_MAP[iconKey]||iconKey]||'';
+      var lmLbl=(lm.label||lm.lable||'').toLowerCase();
       var cx2=x1+w/2, cy2=y1+h/2;
-      svg+='<circle cx="'+cx2+'" cy="'+cy2+'" r="12" fill="rgba(255,255,255,0.25)"/>';
-      svg+=getParkIcon(iconKey, cx2, cy2);
+      svg+='<circle cx="'+cx2+'" cy="'+cy2+'" r="12" fill="rgba(255,255,255,0.18)"/>';
+      svg+=getParkIcon(lmLbl||iconKey, cx2, cy2);
       lmRegions.push({name:lm.label||lm.lable||'',x:x1,y:y1,w:w,h:h});
     } else if(tp==='landmark'){
       var lmColor=lm.color||'#5C4033';
@@ -1079,7 +1138,11 @@ async function init(){
       }
     });
   }catch(e){console.warn('landmarks:',e);lms=[];}
-  buildGrid();updateStats();posLayout();
+  buildGrid();updateStats();
+  posLayout();
+  // Re-run after fonts settle to get accurate header height
+  setTimeout(function(){posLayout();center();},200);
+  setTimeout(function(){posLayout();center();},600);
   setTimeout(function(){var l=document.getElementById('L');l.style.opacity='0';setTimeout(function(){l.style.display='none';},500);},2500);
   window.addEventListener('resize',function(){posLayout();center();});
 }
